@@ -9,7 +9,7 @@
     "title": "Todo",
     "width": 270,
     "height": 480,
-    "toolbar": true
+    "toolbar": false
   },
   "devDependencies": {
     "gulp": "^3.8.0",

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="css/style.css">
+<meta charset="utf-8">
+<title>Todo</title>
+<script src="js/vue.min.js"></script>
+<body>
+
+<div id="create">
+  <input
+    type="text"
+    placeholder="Task"
+    v-model="text"
+    v-on="keyup: add | key enter"
+    >
+</div>
+
+<ul id="list">
+  <li
+    v-repeat="tasks"
+    >
+    <span v-show="!edit"
+      v-on="click: edit = true"
+      >
+      {{todo}}
+    </span>
+    <input
+      type="text"
+      v-show="edit"
+      v-model="todo"
+      v-on="keyup: save | key enter"
+      >
+    <span v-on="click: done">D</span>
+  </li>
+</ul>
+
+<script src="js/app.js"></script>

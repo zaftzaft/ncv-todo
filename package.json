@@ -1,0 +1,23 @@
+{
+  "main": "index.html",
+  "name": "ncv-todo",
+  "version": "0.0.0",
+  "description": "Todo App made of node-webkit, coffee-script and vue.js",
+  "author": "@zaftzaft",
+  "license": "MIT",
+  "window": {
+    "title": "Todo",
+    "width": 270,
+    "height": 480,
+    "toolbar": true
+  },
+  "devDependencies": {
+    "gulp": "^3.8.0",
+    "gulp-coffee": "^2.0.1",
+    "gulp-less": "^1.2.3",
+    "gulp-rename": "^1.2.0"
+  },
+  "dependencies": {
+    "node-uuid": "^1.4.1"
+  }
+}

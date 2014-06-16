@@ -18,8 +18,10 @@
   <li
     v-repeat="tasks"
     >
-    <span v-show="!edit"
+    <span
+      v-show="!edit"
       v-on="click: edit = true"
+      class="text"
       >
       {{todo}}
     </span>
@@ -29,7 +31,7 @@
       v-model="todo"
       v-on="keyup: edit = false | key enter"
       >
-    <span v-on="click: done">D</span>
+    <span v-on="click: done" class="done">D</span>
   </li>
 </ul>
 

@@ -28,15 +28,16 @@ create = new Vue {
 }
 
 list = new Vue {
-  el: "#list",
+  el: "#list"
   data: {
     tasks: todo.json
-  },
+  }
   methods: {
     done: (e) ->
       vm = e.targetVM
       @tasks.$remove vm.$index
   }
+  lazy: true
 }
 
 list.$watch "tasks", ->

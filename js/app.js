@@ -61,7 +61,8 @@
         vm = e.targetVM;
         return this.tasks.$remove(vm.$index);
       }
-    }
+    },
+    lazy: true
   });
 
   list.$watch("tasks", function() {

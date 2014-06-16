@@ -1,7 +1,7 @@
 {
   "main": "index.html",
   "name": "ncv-todo",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Todo App made of node-webkit, coffee-script and vue.js",
   "author": "@zaftzaft",
   "license": "MIT",

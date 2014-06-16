@@ -1,6 +1,7 @@
 var gulp = require("gulp");
 var coffee = require("gulp-coffee");
 var less = require("gulp-less");
+var plumber = require("gulp-plumber");
 var rename = require("gulp-rename");
 
 var paths = {
@@ -10,12 +11,14 @@ var paths = {
 
 gulp.task("coffee", function(){
   gulp.src(paths.scripts)
+  .pipe(plumber())
   .pipe(coffee())
   .pipe(gulp.dest("./js"));
 });
 
 gulp.task("less", function(){
   gulp.src("./less/style.less")
+  .pipe(plumber())
   .pipe(less({
     compress: true,
     cleancss: true

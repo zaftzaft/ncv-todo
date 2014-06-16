@@ -27,7 +27,7 @@
       type="text"
       v-show="edit"
       v-model="todo"
-      v-on="keyup: save | key enter"
+      v-on="keyup: edit = false | key enter"
       >
     <span v-on="click: done">D</span>
   </li>

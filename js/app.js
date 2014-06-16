@@ -1,70 +1,50 @@
 (function() {
-  var App, create, list, todo, uuid;
+  var JSONStorage, create, list, todo, uuid,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   uuid = require("node-uuid");
 
-  App = (function() {
-    function App(storageName) {
+  JSONStorage = (function() {
+    function JSONStorage(storageName, properties) {
       var store;
       this.storageName = storageName;
+      this.properties = properties != null ? properties : [];
+      this.save = __bind(this.save, this);
       store = localStorage[this.storageName];
-      this.tasks = store ? JSON.parse(store) : [];
+      this.json = store ? JSON.parse(store) : [];
     }
 
-    App.prototype.save = function() {
-      var tasks;
-      tasks = this.tasks.map(function(task) {
-        return {
-          todo: task.todo,
-          id: task.id
+    JSONStorage.prototype.save = function() {
+      var json;
+      json = this.json.map((function(_this) {
+        return function(item) {
+          var obj, prop, _i, _len, _ref;
+          obj = {};
+          _ref = _this.properties;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            prop = _ref[_i];
+            obj[prop] = item[prop];
+          }
+          return obj;
         };
-      });
-      return localStorage[this.storageName] = JSON.stringify(tasks);
+      })(this));
+      return localStorage[this.storageName] = JSON.stringify(json);
     };
 
-    App.prototype.add = function(todo) {
-      this.tasks.push({
-        todo: todo,
-        id: uuid.v4()
-      });
-      return this.save();
-    };
-
-    App.prototype.done = function(id) {
-      var index;
-      index = null;
-      this.tasks.some(function(task, i) {
-        if (task.id === id) {
-          index = i;
-          return true;
-        }
-      });
-      if (index) {
-        this.tasks.splice(index, 1);
-      }
-      return this.save();
-    };
-
-    App.prototype.edit = function(id, todo) {
-      this.tasks.forEach(function(task) {
-        if (task.id === id) {
-          return task.todo = todo;
-        }
-      });
-      return this.save();
-    };
-
-    return App;
+    return JSONStorage;
 
   })();
 
-  todo = new App("todo");
+  todo = new JSONStorage("todo", ["todo", "id"]);
 
   create = new Vue({
     el: "#create",
     methods: {
       add: function() {
-        todo.add(this.text);
+        todo.json.push({
+          todo: this.text,
+          id: uuid.v4()
+        });
         return this.text = "";
       }
     }
@@ -73,21 +53,19 @@
   list = new Vue({
     el: "#list",
     data: {
-      tasks: todo.tasks
+      tasks: todo.json
     },
     methods: {
-      save: function(e) {
-        var vm;
-        todo.save();
-        vm = e.targetVM;
-        return vm.edit = false;
-      },
       done: function(e) {
         var vm;
         vm = e.targetVM;
         return this.tasks.$remove(vm.$index);
       }
     }
+  });
+
+  list.$watch("tasks", function() {
+    return todo.save();
   });
 
 }).call(this);

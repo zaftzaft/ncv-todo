@@ -1,49 +1,28 @@
 uuid = require "node-uuid"
 
-class App
-  constructor: (@storageName) ->
+class JSONStorage
+  constructor: (@storageName, @properties = []) ->
     store = localStorage[@storageName]
-    @tasks = if store then JSON.parse store else []
+    @json = if store then JSON.parse store else []
 
-  save: ->
-    tasks = @tasks.map (task) ->
-      {
-        todo: task.todo
-        id:   task.id
-      }
-    localStorage[@storageName] = JSON.stringify(tasks)
+  save: =>
+    json = @json.map (item) =>
+      obj = {}
+      for prop in @properties
+        obj[prop] = item[prop]
+      return obj
+    localStorage[@storageName] = JSON.stringify(json)
 
-  add: (todo) ->
-    @tasks.push {
-      todo: todo
-      id  : uuid.v4()
-    }
-    @save()
-
-  done: (id) ->
-    #@tasks = (task for task in @tasks when task.id isnt id)
-    index = null
-    @tasks.some (task, i) ->
-      if task.id is id
-        index = i
-        true
-    @tasks.splice index, 1 if index
-    @save()
-
-  edit: (id, todo) ->
-    @tasks.forEach (task) ->
-      if task.id is id
-        task.todo = todo
-    @save()
-
-
-todo = new App "todo"
+todo = new JSONStorage "todo", ["todo", "id"]
 
 create = new Vue {
   el: "#create"
   methods: {
     add: ->
-      todo.add @text
+      todo.json.push {
+        todo: @text
+        id  : uuid.v4()
+      }
       @text = ""
   }
 }
@@ -51,16 +30,14 @@ create = new Vue {
 list = new Vue {
   el: "#list",
   data: {
-    tasks: todo.tasks
+    tasks: todo.json
   },
   methods: {
-    save: (e) ->
-      todo.save()
-      vm = e.targetVM
-      vm.edit = false
-
     done: (e) ->
       vm = e.targetVM
       @tasks.$remove vm.$index
   }
 }
+
+list.$watch "tasks", ->
+  todo.save()
